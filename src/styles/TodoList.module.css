@@ -32,8 +32,3 @@ button.addButton:hover {
   align-items: center;
   margin-bottom: 10px;
 }
-
-.todoText {
-  margin-left: 10px;
-  flex-grow: 1;
-}

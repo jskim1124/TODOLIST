@@ -5,6 +5,8 @@
 */
 import React, { useState } from "react";
 import TodoItem from "@/components/TodoItem";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import styles from "@/styles/TodoList.module.css";
 
 // TodoList 컴포넌트를 정의합니다.
@@ -13,6 +15,7 @@ const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [deadline, setDeadline] = useState(null);
   //const []
   //const now = new Date(Date.now()).toString().substring(4,25);
 
@@ -27,8 +30,9 @@ const TodoList = () => {
     //   completed: 완료 여부,
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
-    setTodos([...todos, { id: Date(Date.now()), text: input, completed: false}]);
+    setTodos([...todos, {id: Date.now(), text: input, completed: false, deadline: deadline, dday: Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)).toString()}]);
     setInput("");
+    setDeadline(null);
     setIsButtonDisabled(true); // 버튼 비활성화
 
     setTimeout(() => {
@@ -69,23 +73,44 @@ const TodoList = () => {
         Todo List
       </h1>
       {/* 할 일을 입력받는 텍스트 필드입니다. */}
-      <input
-        type="text"
-        className="shadow-lg w-full p-1 mb-4 border border-gray-300 rounded"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
+
+      <li className="mb-1">
+        <input
+          type="text"
+          className="shadow-lg w-full p-1 mb-4 border border-gray-300 rounded"
+          style={{ width: "500%" }}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+
+        <DatePicker 
+        className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
+        selected={deadline}
+        onChange={(date) => setDeadline(date)}
+        placeholderText="Select deadline"
+        />
+      </li>
+
       {/* 할 일을 추가하는 버튼입니다. */}
       <div class="grid">
         <button
-          className={`w-30 justify-self-end p-1 mb-4 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500 ${isButtonDisabled && "bg-red-500 border-red-500 hover:bg-red hover:text-red-500 cursor-not-allowed"}`}
-          onClick={addTodo}
+          className={`w-30 justify-self-end p-1 mb-7 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500 ${isButtonDisabled && "bg-red-500 border-red-500 hover:bg-red hover:text-red-500 cursor-not-allowed"}`}
           onClick={addTodo}
           disabled={isButtonDisabled}
         >
           Add Todo
         </button>
       </div>
+
+      <li class="mb-1">
+          <div className="ml-1 w-10 text-center border border-blue-500 rounded ">완료</div>
+          <div className="ml-2 w-64 text-center  border border-blue-500 rounded ">할 일</div>
+          <div className="ml-2 w-24 text-center  border border-blue-500 rounded ">D-Day까지</div>
+          <div className="ml-2 w-24 text-center   border border-blue-500 rounded ">마감일</div>
+          <div className="ml-2 w-12 text-center border border-blue-500 rounded ">제거</div>
+      </li>
+
+
       {/* 할 일 목록을 렌더링합니다. */}
       <ul>
         {todos.map((todo) => (
