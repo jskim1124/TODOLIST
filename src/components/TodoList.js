@@ -12,6 +12,9 @@ const TodoList = () => {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  //const []
+  //const now = new Date(Date.now()).toString().substring(4,25);
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
   const addTodo = () => {
@@ -24,8 +27,14 @@ const TodoList = () => {
     //   completed: 완료 여부,
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
-    setTodos([...todos, { id: Date.now(), text: input, completed: false }]);
+    setTodos([...todos, { id: Date(Date.now()), text: input, completed: false}]);
     setInput("");
+    setIsButtonDisabled(true); // 버튼 비활성화
+
+    setTimeout(() => {
+      setIsButtonDisabled(false); // 버튼 활성화
+    }, 1000);
+
   };
 
   // toggleTodo 함수는 체크박스를 눌러 할 일의 완료 상태를 변경하는 함수입니다.
@@ -62,13 +71,6 @@ const TodoList = () => {
       {/* 할 일을 입력받는 텍스트 필드입니다. */}
       <input
         type="text"
-        // className={styles.itemInput}
-        // -- itemInput CSS code --
-        // input[type="text"].itemInput {
-        //   width: 100%;
-        //   padding: 5px;
-        //   margin-bottom: 10px;
-        // }
         className="shadow-lg w-full p-1 mb-4 border border-gray-300 rounded"
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -76,23 +78,10 @@ const TodoList = () => {
       {/* 할 일을 추가하는 버튼입니다. */}
       <div class="grid">
         <button
-          // className={styles.addButton}
-          // -- addButton CSS code --
-          // button.addButton {
-          //   padding: 5px;
-          //   background-color: #0070f3;
-          //   color: white;
-          //   border: 1px solid #0070f3;
-          //   border-radius: 5px;
-          //   cursor: pointer;
-          // }
-          //
-          // button.addButton:hover {
-          //   background-color: #fff;
-          //   color: #0070f3;
-          // }
-          className="w-40 justify-self-end p-1 mb-4 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500"
+          className={`w-30 justify-self-end p-1 mb-4 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500 ${isButtonDisabled && "bg-red-500 border-red-500 hover:bg-red hover:text-red-500 cursor-not-allowed"}`}
           onClick={addTodo}
+          onClick={addTodo}
+          disabled={isButtonDisabled}
         >
           Add Todo
         </button>
