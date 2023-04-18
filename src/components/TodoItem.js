@@ -29,7 +29,7 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
       <span
         className="ml-1 w-24 text-center"
       >
-        {todo.dday}
+        D-{todo.dday}
       </span>
 
       <span

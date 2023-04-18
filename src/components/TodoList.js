@@ -14,15 +14,23 @@ const TodoList = () => {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
+  const [errorcode, seterrorcode] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [deadline, setDeadline] = useState(null);
+  const [deadline, setDeadline] = useState("");
   //const []
   //const now = new Date(Date.now()).toString().substring(4,25);
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
   const addTodo = () => {
     // 입력값이 비어있는 경우 함수를 종료합니다.
-    if (input.trim() === "") return;
+    if (input.trim() === "" || deadline === "" || Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)) < 0) {
+      setIsButtonDisabled(true); // 버튼 비활성화
+      seterrorcode("할 일과 마감일을 정확히 입력하십시오")
+      setTimeout(() => { seterrorcode("")
+        setIsButtonDisabled(false); // 1초 후 버튼 활성화
+      }, 1000);
+      return;
+    }    
     // 기존 할 일 목록에 새로운 할 일을 추가하고, 입력값을 초기화합니다.
     // {
     //   id: 할일의 고유 id,
@@ -32,9 +40,9 @@ const TodoList = () => {
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
     setTodos([...todos, {id: Date.now(), text: input, completed: false, deadline: deadline, dday: Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)).toString()}]);
     setInput("");
-    setDeadline(null);
+    setDeadline("");
     setIsButtonDisabled(true); // 버튼 비활성화
-
+    seterrorcode("");
     setTimeout(() => {
       setIsButtonDisabled(false); // 버튼 활성화
     }, 1000);
@@ -66,6 +74,8 @@ const TodoList = () => {
     );
   };
 
+  const borderStyle = " text-center border border-blue-500 rounded ";
+
   // 컴포넌트를 렌더링합니다.
   return (
     <div className={styles.container}>
@@ -92,23 +102,25 @@ const TodoList = () => {
       </li>
 
       {/* 할 일을 추가하는 버튼입니다. */}
-      <div class="grid">
+      <li>
+        <span className= "w-full pl-5 text-red-500 mr-10 mb-7 ">{errorcode}</span>
         <button
-          className={`w-30 justify-self-end p-1 mb-7 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500 ${isButtonDisabled && "bg-red-500 border-red-500 hover:bg-red hover:text-red-500 cursor-not-allowed"}`}
+          className={`w-1/5 justify-self-end p-1 mb-7 bg-blue-500 text-white border border-blue-500 rounded hover:bg-white hover:text-blue-500 ${isButtonDisabled && "bg-red-500 border-red-500 hover:bg-red hover:text-red-500 cursor-not-allowed"}`}
           onClick={addTodo}
           disabled={isButtonDisabled}
         >
           Add Todo
         </button>
-      </div>
-
-      <li class="mb-1">
-          <div className="ml-1 w-10 text-center border border-blue-500 rounded ">완료</div>
-          <div className="ml-2 w-64 text-center  border border-blue-500 rounded ">할 일</div>
-          <div className="ml-2 w-24 text-center  border border-blue-500 rounded ">D-Day까지</div>
-          <div className="ml-2 w-24 text-center   border border-blue-500 rounded ">마감일</div>
-          <div className="ml-2 w-12 text-center border border-blue-500 rounded ">제거</div>
       </li>
+
+      <li className="mb-1">
+        <div className={`${borderStyle} ml-1 w-10`}>완료</div>
+        <div className={`${borderStyle} ml-2 w-64`}>할 일</div>
+        <div className={`${borderStyle} ml-2 w-24`}>D-Day까지</div>
+        <div className={`${borderStyle} ml-2 w-24`}>마감일</div>
+        <div className={`${borderStyle} ml-2 w-12`}>제거</div>
+      </li>
+
 
 
       {/* 할 일 목록을 렌더링합니다. */}
