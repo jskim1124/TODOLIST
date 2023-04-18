@@ -18,13 +18,11 @@ const TodoList = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [deadline, setDeadline] = useState("");
   const [category, setCategory] = useState("");
-  //const []
-  //const now = new Date(Date.now()).toString().substring(4,25);
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
   const addTodo = () => {
     // 입력값이 비어있는 경우 함수를 종료합니다.
-    if (input.trim() === "" || deadline === "" || category === "" || Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)) < 0) {
+    if (input.trim() === "" || deadline === "" || category === "" ) {
       setIsButtonDisabled(true); // 버튼 비활성화
       seterrorcode("할 일과 마감일, 카테고리를 다시 확인하십시오")
       setTimeout(() => {
@@ -100,18 +98,26 @@ const TodoList = () => {
         selected={deadline}
         onChange={(date) => setDeadline(date)}
         placeholderText="Select deadline"
+        minDate={new Date()}
         />
 
         <select
-            className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">Select category</option>
-            <option value="work">Work</option>
-            <option value="study">Study</option>
-            <option value="exercise">Exercise</option>
-            <option value="other">Other</option>
+          className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
+          value={category}
+          onChange={(e) => {
+            // if (e.target.value === "other") {
+            //   setCategory(prompt("Please enter a category"));
+            // } else 
+            {
+              setCategory(e.target.value);
+            }
+          }}
+        >
+          <option value="">Select category</option>
+          <option value="Work">Work</option>
+          <option value="Study">Study</option>
+          <option value="Exercise">Exercise</option>
+          <option value="other">Other</option>
         </select>
 
       </li>
@@ -132,12 +138,12 @@ const TodoList = () => {
         <div className={`${borderStyle} w-12`}>완료</div>
         <div className={`${borderStyle} ml-2 w-64`}>할 일</div>
         <div className={`${borderStyle} ml-2 w-24`}>카테고리</div>
-        <div className={`${borderStyle} ml-2 w-24`}>D-Day</div>
+        <button 
+        className={`${borderStyle} ml-2 w-24`}
+        >D-Day</button>
         <div className={`${borderStyle} ml-2 w-32`}>마감일</div>
         <div className={`${borderStyle} ml-2 w-16`}>제거</div>
       </li>
-
-
 
       {/* 할 일 목록을 렌더링합니다. */}
       <ul>
