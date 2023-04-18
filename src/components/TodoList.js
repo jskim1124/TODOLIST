@@ -75,7 +75,6 @@ const TodoList = () => {
   };
 
   const borderStyle = " text-center border border-blue-500 rounded ";
-
   // 컴포넌트를 렌더링합니다.
   return (
     <div className={styles.container}>
@@ -100,15 +99,15 @@ const TodoList = () => {
         placeholderText="Select deadline"
         minDate={new Date()}
         />
-
+    
         <select
           className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
           value={category}
+          selected={category}
           onChange={(e) => {
-            // if (e.target.value === "other") {
-            //   setCategory(prompt("Please enter a category"));
-            // } else 
-            {
+            if (e.target.value === "other") {
+              setCategory(prompt("Please enter a category"));
+            } else  {
               setCategory(e.target.value);
             }
           }}
