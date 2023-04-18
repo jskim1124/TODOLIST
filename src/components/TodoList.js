@@ -17,16 +17,17 @@ const TodoList = () => {
   const [errorcode, seterrorcode] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [deadline, setDeadline] = useState("");
+  const [category, setCategory] = useState("");
   //const []
   //const now = new Date(Date.now()).toString().substring(4,25);
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
   const addTodo = () => {
     // 입력값이 비어있는 경우 함수를 종료합니다.
-    if (input.trim() === "" || deadline === "" || Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)) < 0) {
+    if (input.trim() === "" || deadline === "" || category === "" || Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)) < 0) {
       setIsButtonDisabled(true); // 버튼 비활성화
-      seterrorcode("할 일과 마감일을 정확히 입력하십시오")
-      setTimeout(() => { seterrorcode("")
+      seterrorcode("할 일과 마감일, 카테고리를 다시 확인하십시오")
+      setTimeout(() => {
         setIsButtonDisabled(false); // 1초 후 버튼 활성화
       }, 1000);
       return;
@@ -38,9 +39,10 @@ const TodoList = () => {
     //   completed: 완료 여부,
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
-    setTodos([...todos, {id: Date.now(), text: input, completed: false, deadline: deadline, dday: Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)).toString()}]);
+    setTodos([...todos, {id: Date.now(), text: input, completed: false, deadline: deadline, category: category, dday: Math.ceil((deadline - Date.now()) / (1000 * 60 * 60 * 24)).toString()}]);
     setInput("");
     setDeadline("");
+    setCategory("");
     setIsButtonDisabled(true); // 버튼 비활성화
     seterrorcode("");
     setTimeout(() => {
@@ -99,6 +101,19 @@ const TodoList = () => {
         onChange={(date) => setDeadline(date)}
         placeholderText="Select deadline"
         />
+
+        <select
+            className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Select category</option>
+            <option value="work">Work</option>
+            <option value="study">Study</option>
+            <option value="exercise">Exercise</option>
+            <option value="other">Other</option>
+        </select>
+
       </li>
 
       {/* 할 일을 추가하는 버튼입니다. */}
@@ -114,11 +129,12 @@ const TodoList = () => {
       </li>
 
       <li className="mb-1">
-        <div className={`${borderStyle} ml-1 w-10`}>완료</div>
+        <div className={`${borderStyle} w-12`}>완료</div>
         <div className={`${borderStyle} ml-2 w-64`}>할 일</div>
-        <div className={`${borderStyle} ml-2 w-24`}>D-Day까지</div>
-        <div className={`${borderStyle} ml-2 w-24`}>마감일</div>
-        <div className={`${borderStyle} ml-2 w-12`}>제거</div>
+        <div className={`${borderStyle} ml-2 w-24`}>카테고리</div>
+        <div className={`${borderStyle} ml-2 w-24`}>D-Day</div>
+        <div className={`${borderStyle} ml-2 w-32`}>마감일</div>
+        <div className={`${borderStyle} ml-2 w-16`}>제거</div>
       </li>
 
 
