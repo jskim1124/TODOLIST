@@ -74,6 +74,14 @@ const TodoList = () => {
     );
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      addTodo();
+      setFocused(false);
+    }
+  };
+
+
   const borderStyle = " text-center border border-blue-500 rounded ";
   // 컴포넌트를 렌더링합니다.
   return (
@@ -85,11 +93,13 @@ const TodoList = () => {
 
       <li className="mb-1">
         <input
-          type="text"
-          className="shadow-lg w-full p-1 mb-4 border border-gray-300 rounded"
-          style={{ width: "500%" }}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+        type="text"
+        className="shadow-lg w-full p-1 mb-4 border border-gray-300 rounded"
+        style={{ width: "500%" }}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={handleKeyPress} 
+        
         />
 
         <DatePicker 
@@ -98,12 +108,15 @@ const TodoList = () => {
         onChange={(date) => setDeadline(date)}
         placeholderText="Select deadline"
         minDate={new Date()}
+        onKeyDown={(e) => handleKeyPress(e)}
+        
         />
     
         <select
           className="shadow-lg w-40 p-1 text-center ml-3 mb-4 border border-gray-300 rounded"
           value={category}
           selected={category}
+          onKeyPress={handleKeyPress} 
           onChange={(e) => {
             if (e.target.value === "other") {
               setCategory(prompt("Please enter a category"));
