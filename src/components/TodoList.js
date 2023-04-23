@@ -1,8 +1,3 @@
-/* 
-  할 일 목록을 관리하고 렌더링하는 주요 컴포넌트입니다.
-  상태 관리를 위해 `useState` 훅을 사용하여 할 일 목록과 입력값을 관리합니다.
-  할 일 목록의 추가, 삭제, 완료 상태 변경 등의 기능을 구현하였습니다.
-*/
 import React, { useState } from "react";
 import TodoItem from "@/components/TodoItem";
 import DatePicker from "react-datepicker";
