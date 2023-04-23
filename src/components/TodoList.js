@@ -76,9 +76,7 @@ const TodoList = () => {
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      e.preventDefault();
       addTodo();
-      e.target.blur();
     }
   };
 
