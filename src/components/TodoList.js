@@ -21,7 +21,7 @@ const todoCollection = collection(db, "todos");
 
 
 // TodoList 컴포넌트를 정의합니다.
-export default function TodoList () {
+const TodoList = () => {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
@@ -39,14 +39,14 @@ export default function TodoList () {
     const newTodos = [];
 
     results.docs.forEach((doc) => {
-      newTodos.push({id:doc.id, ...doc.data()});
+      newTodos.push({id: doc.id, ...doc.data() });
     });
 
     setTodos(newTodos);
   };
 
   useEffect (()=> {
-    getTodos;
+    getTodos();
   },[]);
 
 
@@ -116,9 +116,6 @@ export default function TodoList () {
     setTimeout(() => {
       setIsButtonDisabled(false); // 버튼 활성화
     }, 1000);
-
-
-
   };
 
   // toggleTodo 함수는 체크박스를 눌러 할 일의 완료 상태를 변경하는 함수입니다.
@@ -272,3 +269,4 @@ export default function TodoList () {
   );
 }
 
+export default TodoList;
