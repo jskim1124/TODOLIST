@@ -2,6 +2,24 @@ import React, { useState, useEffect } from "react";
 import TodoItem from "@/components/TodoItem";
 import styles from "@/styles/TodoList.module.css";
 
+import {db} from "@/firebase";
+import {
+  collection,
+  query,
+  doc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  orderBy,
+  deleteField,
+} from "firebase/firestore"
+
+const todoCollection = collection(db, "todos");
+
+
+
+
 // TodoList 컴포넌트를 정의합니다.
 export default function TodoList () {
   // 상태를 관리하는 useState 훅을 사용하여 할 일 목록과 입력값을 초기화합니다.
@@ -13,6 +31,25 @@ export default function TodoList () {
   const [stime, setsTime] = useState("");
   const [ftime, setfTime] = useState("");
   const [reflect, setReflect] = useState("");
+
+  const getTodos = async () => {
+    const q = query(todoCollection);
+
+    const results = await getDocs(q);
+    const newTodos = [];
+
+    results.docs.forEach((doc) => {
+      newTodos.push({id:doc.id, ...doc.data()});
+    });
+
+    setTodos(newTodos);
+  };
+
+  useEffect (()=> {
+    getTodos;
+  },[]);
+
+
   
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -42,7 +79,7 @@ export default function TodoList () {
 
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
-  const addTodo = () => {
+  const addTodo = async () => {
     // 입력값이 비어있는 경우 함수를 종료합니다.
     if (input.trim() === "" || stime === "" || ftime === "" ||  new Date(`1970-01-01T${stime}`) >= new Date(`1970-01-01T${ftime}`) || category === "" ) {
       setIsButtonDisabled(true); // 버튼 비활성화
@@ -59,8 +96,17 @@ export default function TodoList () {
     //   completed: 완료 여부,
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
-    const newTodo = {id: Date.now(), text: input, completed: false, category: category, stime: stime, ftime: ftime};
-    setTodos([...todos, newTodo]);
+    
+    const docRef = await addDoc(todoCollection,{
+      text:input,
+      completed: false,
+      category: category, 
+      stime: stime, 
+      ftime: ftime,
+    });
+
+    // const newTodo = {id: Date.now(), text: input, completed: false, category: category, stime: stime, ftime: ftime};
+    setTodos([...todos, {id:docRef.id, text:input, completed:false, category:category, stime:stime, ftime:ftime}]);
     setInput("");
     setCategory("");
     setsTime("");
@@ -78,16 +124,27 @@ export default function TodoList () {
   // toggleTodo 함수는 체크박스를 눌러 할 일의 완료 상태를 변경하는 함수입니다.
   const toggleTodo = (id) => {
     // 할 일 목록에서 해당 id를 가진 할 일의 완료 상태를 반전시킵니다.
-    setTodos(
-      // todos.map((todo) =>
-      //   todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      // )
-      // ...todo => id: 1, text: "할일1", completed: false
-      todos.map((todo) => {
-        return todo.id === id ? { ...todo, completed: !todo.completed } : todo;
-      })
+    const newTodos = todos.map((todo)=> {
+      if (todo.id === id) {
+        const todoDoc = doc(todoCollection, id);
+        updateDoc(todoDoc, {completed: !todo.completed});
+        return {...todo, completed: !todo.completed};
+      } else{
+        return todo;
+      }
+    });
+    setTodos(newTodos);
+    
+    // setTodos(
+    //   // todos.map((todo) =>
+    //   //   todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    //   // )
+    //   // ...todo => id: 1, text: "할일1", completed: false
+    //   todos.map((todo) => {
+    //     return todo.id === id ? { ...todo, completed: !todo.completed } : todo;
+    //   })
       
-    );
+    // );
 
   };
 
@@ -95,6 +152,9 @@ export default function TodoList () {
   const deleteTodo = (id) => {
     // 해당 id를 가진 할 일을 제외한 나머지 목록을 새로운 상태로 저장합니다.
     // setTodos(todos.filter((todo) => todo.id !== id));
+    const todoDoc = doc(todoCollection, id);
+    deleteDoc(todoDoc);
+    
     setTodos(
       todos.filter((todo) => {
         return todo.id !== id;
@@ -120,7 +180,7 @@ export default function TodoList () {
   return (
     <div className={styles.container}>
       <h1 className="text-xl mb-4 font-bold underline underline-offset-4 decoration-wavy">
-        학습플랜 지원 플랫폼 - PlanWith
+        Todo List
       </h1>
       {/* 할 일을 입력받는 텍스트 필드입니다. */}
 
