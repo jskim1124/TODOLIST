@@ -35,13 +35,6 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
       >
         D-{todo.dday}
       </span>
-
-      <span
-        className="ml-2 w-32 text-center"
-      >
-        {todo.deadline.toString().substring(4,15)}
-      </span>
-
       {/* 삭제 버튼을 렌더링하고, 클릭 시 onDelete 함수를 호출하여 해당 할 일을 삭제합니다. */}
       <button
         className="ml-2 w-16 bg-gray-500 text-white border border-gray-500 rounded hover:bg-white hover:text-gray-500"
