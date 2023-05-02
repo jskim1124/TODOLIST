@@ -25,7 +25,7 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
       </span>
 
       <span
-        className="ml-2 w-24 text-center"
+        className="ml-2 w-32 text-center"
       >
         {todo.category}
       </span>
@@ -33,7 +33,12 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
       <span
         className="ml-2 w-24 text-center"
       >
-        D-{todo.dday}
+        {todo.stime}
+      </span>
+      <span
+        className="ml-2 w-24 text-center"
+      >
+        {todo.ftime}
       </span>
       {/* 삭제 버튼을 렌더링하고, 클릭 시 onDelete 함수를 호출하여 해당 할 일을 삭제합니다. */}
       <button
