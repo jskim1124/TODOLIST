@@ -51,31 +51,31 @@ export default function TodoList () {
 
 
   
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetch('api/todo')
-        .then((res) => res.json())
-        .then((data) => setTodos(data))
-        .catch((err) => console.log(err));
-    }, 1000);
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     fetch('api/todo')
+  //       .then((res) => res.json())
+  //       .then((data) => setTodos(data))
+  //       .catch((err) => console.log(err));
+  //   }, 1000);
     
-    return () => clearInterval(intervalId); // 언마운트 시 intervalId 클리어
-  }, []);
+  //   return () => clearInterval(intervalId); // 언마운트 시 intervalId 클리어
+  // }, []);
 
-  const postTodo = (todoList) => {
-    fetch("api/todo", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ todo: todoList }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.message);
-      })
-      .catch((err) => console.log(err));
-  };
+  // const postTodo = (todoList) => {
+  //   fetch("api/todo", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ todo: todoList }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data.message);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
-  postTodo(todos)
+  // postTodo(todos)
 
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
