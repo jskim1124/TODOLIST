@@ -14,18 +14,18 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
     <li className={styles.todoItem}>
       {/* 체크박스를 렌더링하고, 체크박스의 상태를 할 일의 완료 상태와 동기화합니다.
           체크박스의 상태가 변경되면 onToggle 함수를 호출하여 완료 상태를 업데이트합니다. */}
-      <input className = "w-12" type="checkbox" checked={todo.completed} onChange={onToggle} />
+      <input className = "w-14" type="checkbox" checked={todo.completed} onChange={onToggle} />
 
       {/* 할 일의 텍스트를 렌더링하고, 완료 상태에 따라 텍스트에 취소선을 적용합니다. */}
       <span
-        className="ml-2 w-64"
+        className="ml-2 w-48"
         style={{ textDecoration: todo.completed ? "line-through" : "none" }}
       >
         {todo.text}
       </span>
 
       <span
-        className="ml-2 w-32 text-center"
+        className="ml-2 w-24 text-center"
       >
         {todo.category}
       </span>
@@ -39,6 +39,11 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
         className="ml-2 w-24 text-center"
       >
         {todo.ftime}
+      </span>
+      <span
+        className="ml-2 w-24 text-center"
+      >
+        {todo.update.toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false }).replace(',', '')}
       </span>
       {/* 삭제 버튼을 렌더링하고, 클릭 시 onDelete 함수를 호출하여 해당 할 일을 삭제합니다. */}
       <button

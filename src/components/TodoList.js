@@ -30,7 +30,6 @@ const TodoList = () => {
   const [category, setCategory] = useState("");
   const [stime, setsTime] = useState("");
   const [ftime, setfTime] = useState("");
-  const [reflect, setReflect] = useState("");
 
   const getTodos = async () => {
     const q = query(todoCollection);
@@ -97,16 +96,19 @@ const TodoList = () => {
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
     
+    const now = new Date();
+
     const docRef = await addDoc(todoCollection,{
       text:input,
       completed: false,
       category: category, 
       stime: stime, 
       ftime: ftime,
+      update : now,
     });
 
     // const newTodo = {id: Date.now(), text: input, completed: false, category: category, stime: stime, ftime: ftime};
-    setTodos([...todos, {id:docRef.id, text:input, completed:false, category:category, stime:stime, ftime:ftime}]);
+    setTodos([...todos, {id:docRef.id, text:input, completed:false, category:category, stime:stime, ftime:ftime, update:now}]);
     setInput("");
     setCategory("");
     setsTime("");
@@ -160,7 +162,7 @@ const TodoList = () => {
   };
 
   const sortTodos = (todos) => {
-    return todos.sort((a,b) => new Date(`1970-01-01T${a.stime}`) - new Date(`1970-01-01T${b.stime}`));
+    return todos.sort((a,b) => a.update - b.update);
   };
 
   const handleKeyPress = (e) => {
@@ -246,11 +248,12 @@ const TodoList = () => {
       </li>
 
       <li className="mb-1">
-        <div className={`${borderStyle} w-12`}>완료</div>
-        <div className={`${borderStyle} ml-2 w-64`}>할 일</div>
-        <div className={`${borderStyle} ml-2 w-32`}>카테고리</div>
+        <div className={`${borderStyle} w-14`}>완료</div>
+        <div className={`${borderStyle} ml-2 w-48`}>할 일</div>
+        <div className={`${borderStyle} ml-2 w-24`}>카테고리</div>
         <div className={`${borderStyle} ml-2 w-24`}>시작시각</div>
         <div className={`${borderStyle} ml-2 w-24`}>종료시각</div>
+        <div className={`${borderStyle} ml-2 w-24`}>등록일</div>
         <div className={`${borderStyle} ml-2 w-16`}>제거</div>
       </li>
 
