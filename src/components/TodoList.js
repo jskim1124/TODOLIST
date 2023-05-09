@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {useSession} from "next-auth/react"
 import TodoItem from "@/components/TodoItem";
 import styles from "@/styles/TodoList.module.css";
 
@@ -12,6 +13,7 @@ import {
   updateDoc,
   deleteDoc,
   orderBy,
+  where,
   deleteField,
 } from "firebase/firestore"
 
@@ -31,8 +33,17 @@ const TodoList = () => {
   const [stime, setsTime] = useState("");
   const [ftime, setfTime] = useState("");
 
+  const { data } = useSession();
+
   const getTodos = async () => {
-    const q = query(todoCollection);
+    
+    if (!data?.user?.name) return;
+
+    const q = query(
+      todoCollection,
+      where("userId", "==", data?.user.id),
+      orderBy("Datetime", "asc")
+    );
 
     const results = await getDocs(q);
     const newTodos = [];
@@ -46,35 +57,7 @@ const TodoList = () => {
 
   useEffect (()=> {
     getTodos();
-  },[]);
-
-
-  
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     fetch('api/todo')
-  //       .then((res) => res.json())
-  //       .then((data) => setTodos(data))
-  //       .catch((err) => console.log(err));
-  //   }, 1000);
-    
-  //   return () => clearInterval(intervalId); // 언마운트 시 intervalId 클리어
-  // }, []);
-
-  // const postTodo = (todoList) => {
-  //   fetch("api/todo", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ todo: todoList }),
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data.message);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  // postTodo(todos)
+  },[data]);
 
 
   // addTodo 함수는 입력값을 이용하여 새로운 할 일을 목록에 추가하는 함수입니다.
@@ -96,7 +79,7 @@ const TodoList = () => {
     // }
     // ...todos => {id: 1, text: "할일1", completed: false}, {id: 2, text: "할일2", completed: false}}, ..
     
-    const now = new Date();
+    const Datetime = new Date().toISOString();
 
     const docRef = await addDoc(todoCollection,{
       text:input,
@@ -104,11 +87,12 @@ const TodoList = () => {
       category: category, 
       stime: stime, 
       ftime: ftime,
-      update : now,
+      Datetime : Datetime,
+      userId: data?.user?.id,
     });
 
     // const newTodo = {id: Date.now(), text: input, completed: false, category: category, stime: stime, ftime: ftime};
-    setTodos([...todos, {id:docRef.id, text:input, completed:false, category:category, stime:stime, ftime:ftime, update:now}]);
+    setTodos([...todos, {id:docRef.id, text:input, completed:false, category:category, stime:stime, ftime:ftime, Datetime:Datetime}]);
     setInput("");
     setCategory("");
     setsTime("");
@@ -161,10 +145,6 @@ const TodoList = () => {
     );
   };
 
-  const sortTodos = (todos) => {
-    return todos.sort((a,b) => a.update - b.update);
-  };
-
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       addTodo();
@@ -179,7 +159,7 @@ const TodoList = () => {
   return (
     <div className={styles.container}>
       <h1 className="text-xl mb-4 font-bold underline underline-offset-4 decoration-wavy">
-        Todo List
+        {data?.user?.name}'s Todo List
       </h1>
       {/* 할 일을 입력받는 텍스트 필드입니다. */}
 
@@ -259,7 +239,7 @@ const TodoList = () => {
 
       {/* 할 일 목록을 렌더링합니다. */}
       <ul>
-        {sortTodos(todos).map((todo) => (
+        {todos.map((todo) => (
           <TodoItem
             key={todo.id}
             todo={todo}

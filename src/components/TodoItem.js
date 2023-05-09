@@ -43,7 +43,7 @@ const TodoItem = ({ todo, onToggle, onDelete }) => {
       <span
         className="ml-2 w-24 text-center"
       >
-        {todo.update.toLocaleString('en-US', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false }).replace(',', '')}
+        {todo.Datetime.substring(5, 10) + " " + todo.Datetime.substring(11, 16)}
       </span>
       {/* 삭제 버튼을 렌더링하고, 클릭 시 onDelete 함수를 호출하여 해당 할 일을 삭제합니다. */}
       <button
