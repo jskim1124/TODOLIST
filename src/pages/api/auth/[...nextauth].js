@@ -6,13 +6,14 @@ export default NextAuth({
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID,
       clientSecret: process.env.KAKAO_CLIENT_SECRET,
+      cookies: false
     }),
   ],
   callbacks: {
     async session({ session, token, user }) {
       session.user.id = token.sub;
       session.user.name = token.name;
-      console.log("token", token);
+      // console.log("token", token);
       return session;
     },
   },

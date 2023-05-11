@@ -89,6 +89,7 @@ const TodoList = () => {
       ftime: ftime,
       Datetime : Datetime,
       userId: data?.user?.id,
+      userName: data?.user.name,
     });
 
     // const newTodo = {id: Date.now(), text: input, completed: false, category: category, stime: stime, ftime: ftime};
